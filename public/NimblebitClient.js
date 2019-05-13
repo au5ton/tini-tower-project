@@ -15,6 +15,7 @@ class NimblebitClient {
     this.player_ss = player_ss || null;
     this.currentVersion = 1;
     this.salt = 1;
+    this.saveData = new NimblebitSave();
     
     this.host = "https://sync.nimblebit.com";
     this.corsAnywhere = "https://cors-anywhere.herokuapp.com/";
@@ -28,7 +29,12 @@ class NimblebitClient {
 
   static regenSalt() {
     return new Promise(function(resolve, reject) {
-      //generate random crypto bits here
+      if (!window.crypto) {
+        reject("This browser does not support crypto!");
+      }
+      let byteData = new Int32Array(1);
+      window.crypto.getRandomValues(byteData);
+      resolve(byteData);
     });
   }
 
@@ -37,7 +43,11 @@ class NimblebitClient {
       input = input.toString();
     }
     return new Promise(function(resolve, reject) {
-      resolve(md5(input));
+      if (typeof md5 !== 'undefined') {
+        resolve(md5(input));
+      } else {
+        reject("Missing md5 crypto library, reload page and try again.");
+      }
     });
   }
 
@@ -78,7 +88,7 @@ class NimblebitClient {
   }
 
   async checkFornewerSave() {
-    let hash = md5("tt/" + this.player_id + "/" + this.salt + this.player_ss + this.superSecret);
+    let hash = await NimblebitClient.computeMd5("tt/" + this.player_id + "/" + this.salt + this.player_ss + this.superSecret);
     let url = this.host + "/sync/current_version/tt/" + this.player_id + "/" + this.salt + "/" + hash;
 
     let incoming = await NimblebitClient.serverRequest('GET', this.corsAnywhere + url);
@@ -89,6 +99,7 @@ class NimblebitClient {
     if (await NimblebitClient.computeMd5(this.player_id + this.salt + id.toString() + this.player_ss + this.superSecret) == h) {
       if (this.currentVersion != id) {
         console.log("Sync version mismatch (local: " + this.currentVersion + ", server: " + id + "), getting server version.");
+        this.currentVersion = id;
         this.getCurrentSave();
       } else {
         console.log("Sync on current version.");
@@ -99,7 +110,7 @@ class NimblebitClient {
   }
 
   async getCurrentSave() {
-    let hash = md5("tt/" + this.player_id + "/" + this.salt + this.player_ss + this.superSecret);
+    let hash = await NimblebitClient.computeMd5("tt/" + this.player_id + "/" + this.salt + this.player_ss + this.superSecret);
     let url = this.host + "/sync/pull/tt/" + this.player_id + "/" + this.salt + "/" + hash;
 
     let incoming = await NimblebitClient.serverRequest('GET', this.corsAnywhere + url);
@@ -110,11 +121,13 @@ class NimblebitClient {
     let data = response.data;
 
     if (await NimblebitClient.computeMd5(this.player_id + this.salt + arg.toString() + data + this.player_ss + this.superSecret) == h) {
-      console.log("downloaded sync hash verification passed! unpaking save...");
       console.log(response);
+      console.log("downloaded sync hash verification passed! unpaking save...");
 
       let unpakedSave = await NimblebitClient.decompressSave(response.data);
       console.log(unpakedSave);
+      this.saveData.extractData(unpakedSave);
+      console.log(this.saveData);
     } else {
       console.log("Sync pull error: hash verificatiopn failed");
     }
@@ -122,7 +135,7 @@ class NimblebitClient {
 
   async registerEmail() {
     if (!this.authenticated) {
-      let hash = md5("tt/" + this.burnBot.player_id + "/" + this.salt + this.cloud_email + this.burnBot.player_ss + this.superSecret);
+      let hash = await NimblebitClient.computeMd5("tt/" + this.burnBot.player_id + "/" + this.salt + this.cloud_email + this.burnBot.player_ss + this.superSecret);
       let url = this.host + "/register_email/tt/" + this.burnBot.player_id + "/" + this.salt + "/" + hash + "?email=" + this.cloud_email + "&promote=1";
 
       let incoming  = await NimblebitClient.serverRequest('POST', this.corsAnywhere + url);
@@ -156,13 +169,17 @@ class NimblebitClient {
     } else {
       console.log("Network request issue, try again later.");
     }
-    NimblebitClient.regenSalt();
+    this.salt = await NimblebitClient.regenSalt();
   }
 
-  newPlayer() {
-    let random1 = parseInt((Math.random() + ' ').substring(2, 11));
-    let random2 = parseInt((Math.random() + ' ').substring(2, 11));
-    let hash = md5("tt/" + random1.toString() + "/" + random2.toString() + this.superSecret);
+  async newPlayer() {
+    let random1 = await NimblebitClient.regenSalt();
+    let random2 = await NimblebitClient.regenSalt();
+    let hash = await NimblebitClient.computeMd5("tt/" + random1.toString() + "/" + random2.toString() + this.superSecret);
     let url = this.host + "/register/tt/" + random1.toString() + "/" + random2.toString() + "/" + hash;
+
+    let incoming = await NimblebitClient.serverRequest('GET', this.corsAnywhere + url);
+    let response = JSON.parse(incoming);
+    console.log(response);
   }
 }

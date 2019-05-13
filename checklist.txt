@@ -1,0 +1,42 @@
+{"player_id":"9GTYN","player_ss":"89f9b90b-4e1e-4b48-af56-df39da7b17a7"}
+{"player_id":"9GV2Y","player_ss":"efe5f6a3-8cd5-4956-897c-ec1db6c26485"}
+{"player_id":"9GV59","player_ss":"be61b26e-330b-41e0-ad2f-48eb79dc3bd6"}
+
+
+
+// public static class Block
+// {
+// 	public static string GetBlock(this string str, string key, int num = int.MinValue)
+// 	{
+// 		string[] separator = new string[1]
+// 		{
+// 			"[" + key + ((num != int.MinValue) ? num.ToString() : string.Empty) + "]"
+// 		};
+// 		string[] array = str.Split(separator, StringSplitOptions.None);
+// 		if (array.Length >= 3)
+// 		{
+// 			return array[1];
+// 		}
+// 		return null;
+// 	}
+
+// 	public static bool HasBlock(this string str, string key, int num = int.MinValue)
+// 	{
+// 		return str.GetBlock(key, num) != null;
+// 	}
+
+// 	public static string Start(string key, int num = int.MinValue)
+// 	{
+// 		return "[" + key + ((num != int.MinValue) ? num.ToString() : string.Empty) + "]";
+// 	}
+
+// 	public static string End(string key, int num = int.MinValue)
+// 	{
+// 		return "[" + key + ((num != int.MinValue) ? num.ToString() : string.Empty) + "]";
+// 	}
+
+// 	public static string Val(string key, object value, int num = int.MinValue)
+// 	{
+// 		return "[" + key + ((num != int.MinValue) ? num.ToString() : string.Empty) + "]" + value.ToString() + "[" + key + ((num != int.MinValue) ? num.ToString() : string.Empty) + "]";
+// 	}
+// }

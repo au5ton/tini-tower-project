@@ -15,14 +15,50 @@
     <Script src="./NimblebitBlock.js"></Script>
     <script src="./NimblebitClient.js"></script>
 
-    <script>
-      var a = new NimblebitClient("75XKD", "halfclownedwizard@gmail.com", "26abff2e-e917-442e-98c7-9c11809c7381");
-    </script>
-
     <label for="inp" class="inp">
       <input type="text" id="inp" placeholder="&nbsp;">
-      <span class="label">Player ID</span>
+      <span class="label" id="label">Player ID</span>
       <span class="border"></span>
     </label>
+    <input type="submit" id="submit" value="Next" onclick="myfunction()">
+
+    <script>
+      var z = new NimblebitClient("75XKD", "halfclownedwizard@gmail.com", "26abff2e-e917-442e-98c7-9c11809c7381");
+      //z.checkFornewerSave();
+
+      let flag = 0;
+      let a = document.getElementById("inp");
+      let d = document.getElementById("label");
+      
+      let b = "";
+      let c = "";
+      let e = "";
+      let f;
+
+      function myfunction() {
+        if (flag === 0) {
+          b = a.value;
+          a.value = "";
+          flag = 1;
+          d.innerText = "Cloud Email";
+        } else if (flag === 1) {
+          c = a.value;
+          a.value = "";
+          flag = 2;
+          d.innerText = "Verification Code";
+          f = new NimblebitClient(b, c);
+          f.registerEmail();
+        } else if (flag === 2) {
+          e = a.value;
+          a.value = "";
+          flag = 0;
+          d.innerText = "";
+          f.verifyDevice(e);
+          setTimeout(function() {
+            f.checkFornewerSave();
+          }, 2000);
+        }
+      }
+    </script>
   </body>
 </html>

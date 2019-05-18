@@ -1,86 +1,127 @@
-html, body {
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100');
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
+
+html,
+body {
   height: 100%;
+  width: 100%;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
 }
 
 body {
   display: grid;
-  height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: Avenir;
+  /* color: #efaa9d; */
+  text-align: center;
+  font-family: 'Lato', Tahoma, sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
 }
 
-* {
-  box-sizing: border-box;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
 }
 
-.inp {
-  position: relative;
-  margin: auto;
-  width: 100%;
-  max-width: 280px;
+p a {
+  color: #f4f2ca;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, .2);
+  padding: .2em 0;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  transition: all .2s linear;
 }
 
-.inp .label {
-  position: absolute;
-  top: 16px;
-  left: 0;
-  font-size: 16px;
-  color: #9098a9;
-  font-weight: 500;
-  transform-origin: 0 0;
-  transition: all 0.2s ease;
+p a:hover {
+  color: #f4f2ca;
+  opacity: .6;
 }
 
-.inp .border {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background: #07f;
-  transform: scaleX(0);
-  transform-origin: 0 0;
-  transition: all 0.15s ease;
+/* style input field text */
+::-webkit-input-placeholder {
+  color: #f4f2ca;
+  opacity: .8;
 }
 
-.inp input {
-  -webkit-appearance: none;
-  width: 100%;
-  border: 0;
-  font-family: inherit;
-  padding: 12px 0;
-  height: 48px;
-  font-size: 16px;
-  font-weight: 500;
-  border-bottom: 2px solid #c8ccd4;
-  background: none;
-  border-radius: 0;
-  color: #223254;
-  transition: all 0.15s ease;
-}
-
-.inp input:hover {
-  background: rgba(34, 50, 84, 0.03);
-}
-
-.inp input:not(:placeholder-shown)+span {
-  color: #5a667f;
-  transform: translateY(-26px) scale(0.75);
-}
-
-.inp input:focus {
-  background: none;
+/* Input field that looks like a button */
+.email-field {
+  width: 80px;
+  display: inline-block;
+  color: #f4f2ca;
+  text-align: center;
+  background-color: #d8492e;
+  padding: .9em 1.8em;
+  border: none;
+  cursor: pointer;
   outline: none;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-transition: all .1s linear;
+  -moz-transition: all .1s linear;
+  transition: all .1s linear;
 }
 
-.inp input:focus+span {
-  color: #07f;
-  transform: translateY(-26px) scale(0.75);
+.email-field:hover {
+  background-color: #d0432a;
 }
 
-.inp input:focus+span+.border {
-  transform: scaleX(1);
+/* after button is clicked */
+.email-field.active {
+  width: 200px;
+  outline: none;
+  color: #efaa9d;
+  text-align: left;
+  cursor: inherit;
+}
+
+/* Email submit button */
+#subscribe-button {
+  width: 35px;
+  height: 35px;
+  border: none;
+  text-indent: -9999px;
+  opacity: .25;
+  background: url(http://helixpowered.com/assets/img/arrow-circle-on-right.svg) no-repeat;
+  background-size: 13px;
+  background-position: 0 1px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  transition: all .2s linear;
+
+  display: none;
+}
+
+#subscribe-button:hover {
+  opacity: .33;
+}
+
+#subscribe-button.show {
+  display: inline-block;
+  background-size: 33px;
+}
+
+/* vertically position everything for effect */
+@media screen and (min-width: 480px) {
+
+  .middle {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
 }
